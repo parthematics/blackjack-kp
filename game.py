@@ -90,6 +90,12 @@ class Blackjack:
     def __init__(self):
         self.playing = True
         self.game_ended = False
+        self.current_deck = None
+        self.my_hand = None
+        self.dealer_hand = None
+
+    def bust(self):
+        return self.my_hand.get_hand_value() > 21
 
     def start_game(self):
         # Main game loop. Will loop again if player wants to play again.
@@ -112,7 +118,5 @@ class Blackjack:
 
             # Secondary game loop. This will loop so long as the current game is not over.
             while not game_ended:
-                
-
-    def bust(self):
-        return self.
+                # TODO: Finish this game loop.
+                pass
