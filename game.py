@@ -37,4 +37,9 @@ class Deck:
         if self.size > 1:
             random.shuffle(self.deck)
 
-class
+class Hand:
+    ''' Initializing a hand of cards. Slight differences exist if hand is for player or for dealer. '''
+    def __init__(self, player=True):
+        self.is_dealer = not player
+        self.hand = []
+        self.hand_value = 0
