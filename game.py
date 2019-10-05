@@ -94,6 +94,7 @@ class Blackjack:
         self.my_hand = None
         self.dealer_hand = None
         self.possible_actions = {'h': 1, 'hit': 1, 's': 0, 'stand': 0}
+        self.play_again_options = {'y': True, 'yes': True, 'n': False, 'no': False}
 
     def has_blackjack(self, hand):
         return hand.get_hand_value() == 21
@@ -163,7 +164,7 @@ class Blackjack:
                     if self.bust():
                         print("YOU BUSTED!")
                         self.game_ended = True
-                        
+
                 # If user wants to stand:
                 else:
                     my_result = self.my_hand.get_hand_value()
@@ -176,3 +177,13 @@ class Blackjack:
                     print("=================================")
 
                     self.check_for_win(my_result, dealer_result)
+
+            play_again = input("DO YOU WANT TO PLAY AGAIN? (Y/N)").lower()
+            while play_again not in self.play_again_options:
+                play_again = input("INVALID INPUT. PLEASE ENTER 'Y' OR 'N'.")
+
+            # If user wishes to play another game, self.game_ended is reset to False so the loop continues.
+            if self.play_again_options[play_again]:
+                self.game_ended = False
+            else:
+                self.playing = False
