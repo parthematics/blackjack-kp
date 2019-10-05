@@ -80,27 +80,30 @@ class Hand:
         self._value_of_hand()
         return self.hand_value
 
-    ''' Printing out the current hand of individual (dealer/player). '''
+    ''' Printing out the current hand of individual (dealer/player). Note that the 'offset' variable is used to
+        account for the misalignment in card positions resulting from the different numbers of characters used
+        to represent each card value. For example, '10' uses 2 characters while the rest use just 1. '''
     def show_hand(self, offset=' '):
         if self.player:
             print_card = [[] for _ in range(7)]
 
             for index, card in enumerate(self.hand):
                 if card.val == '10':
-                    offset = ''  # if we write "10" on the card, the edge will be misaligned
+                    offset = ''  # If we write "10" on the card, the edge will be misaligned.
 
-                # add the individual card on a line by line basis
+                # Add each card in the current hand line by line to make it all fit horizontally.
                 print_card[0].append('┌─────────┐')
-                print_card[1].append('│{}{}       │'.format(card.val, offset))  # use two {} one for char, one for space or char
+                print_card[1].append('│{}{}       │'.format(card.val, offset))  # The {} are being used to fill in the cards.
                 print_card[2].append('│         │')
                 print_card[3].append('│    {}    │'.format(card.suit))
                 print_card[4].append('│         │')
                 print_card[5].append('│       {}{}│'.format(offset, card.val))
                 print_card[6].append('└─────────┘')
 
-            my_hand = [''.join(line) for line in print_card]
+            # Turning print_card into a contiguous string with line breaks to make the cards human readable.
+            my_hand = '\n'.join([''.join(line) for line in print_card])
 
-            print('\n'.join(my_hand))
+            print(my_hand)
             print("TOTAL VALUE: {0}".format(self.get_hand_value()))
 
         else:
@@ -124,8 +127,8 @@ class Hand:
                 print_card[5].append('│       {}{}│'.format(offset, card.val))
                 print_card[6].append('└─────────┘')
 
-            dealer_hand = [''.join(line) for line in print_card]
-            print('\n'.join(dealer_hand))
+            dealer_hand = '\n'.join([''.join(line) for line in print_card])
+            print(dealer_hand)
 
 class Blackjack:
     def __init__(self):
