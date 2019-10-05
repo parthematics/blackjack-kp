@@ -1,6 +1,9 @@
 import random
 from collections import deque
 
+''' The following three classes define the abstractions that will be used to play a game of Blackjack.
+    They will be called in our main Blackjack class, and their methods will simulate a game being played. '''
+
 class Card:
     ''' Initializing a playing card. Every card is defined by a specific value and suit. '''
     def __init__(self, value, suit):
@@ -33,3 +36,5 @@ class Deck:
     def shuffle_deck(self):
         if self.size > 1:
             random.shuffle(self.deck)
+
+class
