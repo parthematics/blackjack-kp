@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import random
 from collections import deque
 
@@ -11,8 +14,8 @@ class Card:
         self.suit = suit
 
     ''' Magic method to printclass out a playing card. Called with 'print(...)'. '''
-    def __repr__(self):
-        return "{0} - {1}".format(self.val, self.suit)
+    def __str__(self):
+        return "{0} OF {1}".format(self.val, self.suit)
 
 class Deck:
     ''' Initializing a deck of cards. Note that the list comprehension will create a total of
@@ -21,14 +24,15 @@ class Deck:
         which is analogous to dealing the cards. Also, 'deque' kind of sounds like 'deck' :) '''
     def __init__(self):
         self.vals = ['A', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-        self.suits = ['Clubs (♣)', 'Hearts (♥)', 'Spades (♠)', 'Diamonds (♦)']
-        self.deck = deque([Card(val, suit) for val in self.vals for suit in self.suits])
+        self.suits = ['CLUBS (♣)', 'HEARTS (♥)', 'SPADES (♠)', 'DIAMONDS (♦)']
+        self.suits_copy = ['♣', '♥', '♠', '♦']
+        self.deck = deque([Card(val, suit) for val in self.vals for suit in self.suits_copy])
         self.size = 52
 
     ''' Using our deque's popleft() feature to deal the top most card from our deck of cards. '''
     def deal_card(self):
         if self.size > 1:
-            card = self.cards.popleft()
+            card = self.deck.popleft()
             self.size -= 1
         return card
 
@@ -73,18 +77,55 @@ class Hand:
 
     ''' Method that returns the total value of current hand. '''
     def get_hand_value(self):
-        self.value_of_hand()
+        self._value_of_hand()
         return self.hand_value
 
     ''' Printing out the current hand of individual (dealer/player). '''
-    def show_hand(self):
+    def show_hand(self, offset=' '):
         if self.player:
-            for card in self.hand:
-                print(card)
-            print("HAND VALUE: ", self.get_hand_value())
+            print_card = [[] for _ in range(7)]
+
+            for index, card in enumerate(self.hand):
+                if card.val == '10':
+                    offset = ''  # if we write "10" on the card, the edge will be misaligned
+
+                # add the individual card on a line by line basis
+                print_card[0].append('┌─────────┐')
+                print_card[1].append('│{}{}       │'.format(card.val, offset))  # use two {} one for char, one for space or char
+                print_card[2].append('│         │')
+                print_card[3].append('│    {}    │'.format(card.suit))
+                print_card[4].append('│         │')
+                print_card[5].append('│       {}{}│'.format(offset, card.val))
+                print_card[6].append('└─────────┘')
+
+            my_hand = [''.join(line) for line in print_card]
+
+            print('\n'.join(my_hand))
+            print("TOTAL VALUE: {0}".format(self.get_hand_value()))
+
         else:
-            print("HOLE CARD (HIDDEN)")
-            print(self.hand[1])
+            print_card = [['┌─────────┐'],
+                          ['│░░░░░░░░░│'],
+                          ['│░░░░░░░░░│'],
+                          ['│░░░░░░░░░│'],
+                          ['│░░░░░░░░░│'],
+                          ['│░░░░░░░░░│'],
+                          ['└─────────┘']]
+
+            for index, card in enumerate(self.hand[1:]):
+                if card.val == '10':
+                    offset = ''
+
+                print_card[0].append('┌─────────┐')
+                print_card[1].append('│{}{}       │'.format(card.val, offset))
+                print_card[2].append('│         │')
+                print_card[3].append('│    {}    │'.format(card.suit))
+                print_card[4].append('│         │')
+                print_card[5].append('│       {}{}│'.format(offset, card.val))
+                print_card[6].append('└─────────┘')
+
+            dealer_hand = [''.join(line) for line in print_card]
+            print('\n'.join(dealer_hand))
 
 class Blackjack:
     def __init__(self):
@@ -108,11 +149,11 @@ class Blackjack:
 
     def blackjack_reached(self, player, dealer):
         if player and not dealer:
-            print("CONGRATULATIONS. YOU HAVE BLACKJACK!")
+            print("\nCONGRATULATIONS. YOU HAVE BLACKJACK!")
         if dealer and not player:
-            print("DEALER HAS BLACKJACK. SORRY!")
+            print("\nDEALER HAS BLACKJACK. SORRY!")
         if player and dealer:
-            print("YOU BOTH HAVE BLACKJACK. WELL DONE!")
+            print("\nYOU BOTH HAVE BLACKJACK. WELL DONE!")
 
     def check_for_win(self, player_value, dealer_value):
         if player_value > dealer_value:
@@ -123,7 +164,6 @@ class Blackjack:
             print("GAME IS A TIE! NICE.")
 
         self.game_ended = True
-
 
     def start_game(self):
         # Main game loop. Will loop again if player wants to play again.
@@ -137,9 +177,9 @@ class Blackjack:
                 self.hit(self.my_hand)
                 self.hit(self.dealer_hand)
 
-            print("YOUR HAND: ")
+            print("\nYOUR HAND: ")
             self.my_hand.show_hand()
-            print("=================================")
+            print("==================================")
             print("DEALER'S HAND: ")
             self.dealer_hand.show_hand()
 
@@ -153,14 +193,23 @@ class Blackjack:
                     self.blackjack_reached(blackjack_me, blackjack_dealer)
                     break
 
-                user_input = input("DO YOU WANT TO HIT OR STAND? (H/S)").lower()
+                user_input = input("\nDO YOU WANT TO HIT OR STAND? (H/S) \n").lower()
                 while user_input not in self.possible_actions.keys():
                     user_input = input("INVALID INPUT. PLEASE ENTER 'H' OR 'S'.")
 
                 # If the user wants to hit:
                 if self.possible_actions[user_input]:
                     self.hit(self.my_hand)
+                    print("\nYOUR HAND: ")
                     self.my_hand.show_hand()
+
+                    if self.dealer_hand.get_hand_value() < 17:
+                        self.hit(self.dealer_hand)
+
+                    print("==================================")
+                    print("DEALER'S HAND: ")
+                    self.dealer_hand.show_hand()
+
                     if self.bust():
                         print("YOU BUSTED!")
                         self.game_ended = True
@@ -170,20 +219,24 @@ class Blackjack:
                     my_result = self.my_hand.get_hand_value()
                     dealer_result = self.dealer_hand.get_hand_value()
 
-                    print("GAME RESULTS:")
-                    print("=================================")
+                    print("\nGAME RESULTS:")
+                    print("==================================")
                     print("YOUR HAND VALUE: {0}".format(my_result))
                     print("DEALER HAND VALUE: {0}".format(dealer_result))
-                    print("=================================")
+                    print("==================================")
 
                     self.check_for_win(my_result, dealer_result)
 
-            play_again = input("DO YOU WANT TO PLAY AGAIN? (Y/N)").lower()
+            play_again = input("DO YOU WANT TO PLAY AGAIN? (Y/N) \n").lower()
             while play_again not in self.play_again_options:
-                play_again = input("INVALID INPUT. PLEASE ENTER 'Y' OR 'N'.")
+                play_again = input("INVALID INPUT. PLEASE ENTER 'Y' OR 'N'. \n")
 
             # If user wishes to play another game, self.game_ended is reset to False so the loop continues.
             if self.play_again_options[play_again]:
                 self.game_ended = False
             else:
                 self.playing = False
+
+if __name__ == "__main__":
+    blackjack = Blackjack()
+    blackjack.start_game()
