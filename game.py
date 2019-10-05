@@ -83,7 +83,7 @@ class Hand:
                 print(card)
             print("HAND VALUE: ", self.get_hand_value())
         else:
-            print("HIDDEN CARD")
+            print("HOLE CARD (HIDDEN)")
             print(self.hand[1])
 
 class Blackjack:
@@ -94,8 +94,19 @@ class Blackjack:
         self.my_hand = None
         self.dealer_hand = None
 
+    def has_blackjack(self, hand):
+        return hand.get_hand_value() == 21
+
     def bust(self):
         return self.my_hand.get_hand_value() > 21
+
+    def end_of_game(self, player, dealer):
+        if player and not dealer:
+            print("CONGRATULATIONS. YOU HAVE BLACKJACK!")
+        if dealer and not player:
+            print("DEALER HAS BLACKJACK. SORRY!")
+        if player and dealer:
+            print("YOU BOTH HAVE BLACKJACK. WELL DONE!")
 
     def start_game(self):
         # Main game loop. Will loop again if player wants to play again.
@@ -117,6 +128,11 @@ class Blackjack:
             self.dealer_hand.show_hand()
 
             # Secondary game loop. This will loop so long as the current game is not over.
-            while not game_ended:
-                # TODO: Finish this game loop.
-                pass
+            while not self.game_ended:
+                blackjack_me = self.has_blackjack(self.my_hand)
+                blackjack_dealer = self.has_blackjack(self.dealer_hand)
+
+                if blackjack_dealer or blackjack_me:
+                    self.game_ended = True
+                    self.end_of_game(blackjack_me, blackjack_dealer)
+                    break
