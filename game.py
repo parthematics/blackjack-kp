@@ -93,20 +93,36 @@ class Blackjack:
         self.current_deck = None
         self.my_hand = None
         self.dealer_hand = None
+        self.possible_actions = {'h': 1, 'hit': 1, 's': 0, 'stand': 0}
 
     def has_blackjack(self, hand):
         return hand.get_hand_value() == 21
 
+    def hit(self, hand):
+        hand.add_to_hand(self.current_deck.deal_card())
+        return
+
     def bust(self):
         return self.my_hand.get_hand_value() > 21
 
-    def end_of_game(self, player, dealer):
+    def blackjack_reached(self, player, dealer):
         if player and not dealer:
             print("CONGRATULATIONS. YOU HAVE BLACKJACK!")
         if dealer and not player:
             print("DEALER HAS BLACKJACK. SORRY!")
         if player and dealer:
             print("YOU BOTH HAVE BLACKJACK. WELL DONE!")
+
+    def check_for_win(self, player_value, dealer_value):
+        if player_value > dealer_value:
+            print("YOU WIN! WELL DONE.")
+        elif dealer_value < player_value:
+            print("THE DEALER WINS. BETTER LUCK NEXT TIME!")
+        else:
+            print("GAME IS A TIE! NICE.")
+
+        self.game_ended = True
+
 
     def start_game(self):
         # Main game loop. Will loop again if player wants to play again.
@@ -117,14 +133,13 @@ class Blackjack:
             self.my_hand, self.dealer_hand = Hand(), Hand(player=False)
 
             for _ in range(2):
-                self.my_hand.add_to_hand(self.current_deck.deal_card())
-                self.dealer_hand.add_to_hand(self.current_deck.deal_card())
+                self.hit(self.my_hand)
+                self.hit(self.dealer_hand)
 
             print("YOUR HAND: ")
             self.my_hand.show_hand()
             print("=================================")
             print("DEALER'S HAND: ")
-            self.my_hand.show_hand()
             self.dealer_hand.show_hand()
 
             # Secondary game loop. This will loop so long as the current game is not over.
@@ -134,5 +149,30 @@ class Blackjack:
 
                 if blackjack_dealer or blackjack_me:
                     self.game_ended = True
-                    self.end_of_game(blackjack_me, blackjack_dealer)
+                    self.blackjack_reached(blackjack_me, blackjack_dealer)
                     break
+
+                user_input = input("DO YOU WANT TO HIT OR STAND? (H/S)").lower()
+                while user_input not in self.possible_actions.keys():
+                    user_input = input("INVALID INPUT. PLEASE ENTER 'H' OR 'S'.")
+
+                # If the user wants to hit:
+                if self.possible_actions[user_input]:
+                    self.hit(self.my_hand)
+                    self.my_hand.show_hand()
+                    if self.bust():
+                        print("YOU BUSTED!")
+                        self.game_ended = True
+                        
+                # If user wants to stand:
+                else:
+                    my_result = self.my_hand.get_hand_value()
+                    dealer_result = self.dealer_hand.get_hand_value()
+
+                    print("GAME RESULTS:")
+                    print("=================================")
+                    print("YOUR HAND VALUE: {0}".format(my_result))
+                    print("DEALER HAND VALUE: {0}".format(dealer_result))
+                    print("=================================")
+
+                    self.check_for_win(my_result, dealer_result)
