@@ -40,7 +40,7 @@ class Deck:
 class Hand:
     ''' Initializing a hand of cards. Slight differences exist if hand is for player or for dealer. '''
     def __init__(self, player=True):
-        self.is_dealer = not player
+        self.player = player
         self.hand = []
         self.hand_value = 0
 
@@ -78,7 +78,7 @@ class Hand:
 
     ''' Printing out the current hand of individual (dealer/player). '''
     def show_hand(self):
-        if not self.is_dealer:
+        if self.player:
             for card in self.hand:
                 print(card)
             print("HAND VALUE: ", self.get_hand_value())
@@ -93,7 +93,26 @@ class Blackjack:
 
     def start_game(self):
         # Main game loop. Will loop again if player wants to play again.
+        while self.playing:
+            self.current_deck = Deck()
+            self.current_deck.shuffle_deck()
 
+            self.my_hand, self.dealer_hand = Hand(), Hand(player=False)
+
+            for _ in range(2):
+                self.my_hand.add_to_hand(self.current_deck.deal_card())
+                self.dealer_hand.add_to_hand(self.current_deck.deal_card())
+
+            print("YOUR HAND: ")
+            self.my_hand.show_hand()
+            print("=================================")
+            print("DEALER'S HAND: ")
+            self.my_hand.show_hand()
+            self.dealer_hand.show_hand()
+
+            # Secondary game loop. This will loop so long as the current game is not over.
+            while not game_ended:
+                
 
     def bust(self):
         return self.
