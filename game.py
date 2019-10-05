@@ -44,12 +44,12 @@ class Hand:
         self.hand = []
         self.hand_value = 0
 
-    ''' Helper method used while calculating total value of hand. '''
+    ''' Private helper method used while calculating total value of hand. '''
     def _reset_hand(self):
         self.hand_value = 0
 
-    ''' Helper method to find the total value of a hand so far. '''
-    def value_of_hand(self, seen_ace=False):
+    ''' Private helper method to find the total value of a hand so far. '''
+    def _value_of_hand(self, seen_ace=False):
         self._reset_hand()
         for card in self.hand:
             if card.val not in {'A', 'J', 'Q', 'K'}:
@@ -71,15 +71,29 @@ class Hand:
     def add_to_hand(self, card):
         self.hand.append(card)
 
-    @property
-    def updated_hand_value(self):
+    ''' Method that returns the total value of current hand. '''
+    def get_hand_value(self):
         self.value_of_hand()
         return self.hand_value
 
-    def show_card(self):
+    ''' Printing out the current hand of individual (dealer/player). '''
+    def show_hand(self):
         if not self.is_dealer:
             for card in self.hand:
-                print()
+                print(card)
+            print("HAND VALUE: ", self.get_hand_value())
         else:
             print("HIDDEN CARD")
             print(self.hand[1])
+
+class Blackjack:
+    def __init__(self):
+        self.playing = True
+        self.game_ended = False
+
+    def start_game(self):
+        # Main game loop. Will loop again if player wants to play again.
+
+
+    def bust(self):
+        return self.
