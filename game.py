@@ -10,7 +10,7 @@ class Card:
         self.val = value
         self.suit = suit
 
-    ''' Magic method to print out a playing card. Called with 'print(...)'. '''
+    ''' Magic method to printclass out a playing card. Called with 'print(...)'. '''
     def __repr__(self):
         return "{0} - {1}".format(self.val, self.suit)
 
@@ -20,7 +20,7 @@ class Deck:
         represent our deck of cards because it is optimized for card removal from the front,
         which is analogous to dealing the cards. Also, 'deque' kind of sounds like 'deck' :) '''
     def __init__(self):
-        self.vals = ['A', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Q', 'K']
+        self.vals = ['A', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
         self.suits = ['Clubs (♣)', 'Hearts (♥)', 'Spades (♠)', 'Diamonds (♦)']
         self.deck = deque([Card(val, suit) for val in self.vals for suit in self.suits])
         self.size = 52
@@ -43,3 +43,43 @@ class Hand:
         self.is_dealer = not player
         self.hand = []
         self.hand_value = 0
+
+    ''' Helper method used while calculating total value of hand. '''
+    def _reset_hand(self):
+        self.hand_value = 0
+
+    ''' Helper method to find the total value of a hand so far. '''
+    def value_of_hand(self, seen_ace=False):
+        self._reset_hand()
+        for card in self.hand:
+            if card.val not in {'A', 'J', 'Q', 'K'}:
+                self.hand_value += int(card.val)
+            else:
+                if card.val != 'A':
+                    self.hand_value += 10
+                else:
+                    # We start by treating all aces as 11s.
+                    seen_ace = True
+                    self.hand_value += 11
+
+        # Accounting for the case where we want 'A' to be treated as a 1.
+        if self.hand_value > 21 and seen_ace:
+            while self.hand_value > 21:
+                self.hand_value -= 10
+
+    ''' Method that adds a new card to our hand of cards. '''
+    def add_to_hand(self, card):
+        self.hand.append(card)
+
+    @property
+    def updated_hand_value(self):
+        self.value_of_hand()
+        return self.hand_value
+
+    def show_card(self):
+        if not self.is_dealer:
+            for card in self.hand:
+                print()
+        else:
+            print("HIDDEN CARD")
+            print(self.hand[1])
