@@ -32,11 +32,6 @@ Any console-based game isn't going to look too pretty. Nevertheless, I wanted to
 ### Data Structures Used ###
 Aside from the custom classes designed to support the modularity of this game, I also used a few interesting built-in data structures to help me create classes that could perform their operations efficiently. The one I'd like to address in particular is the `deque` I used to implement my deck of cards from the Python `collections` module. This is Python's version of a double-ended queue, a queue optimized for removal from the front and back. I used this module because it it is able to remove and return the front card from the queue in constant time, which is analogous to dealing the cards. Plus, 'deque' sounds a little like 'deck,' which I thought was funny.
 
-Instructions for running your code and any tests you may have written
-Rules for your card game, if not one of the three listed above
-A brief explanation of your design choices and any data structures or algorithms that you implemented
-Choice of tooling (language, libraries, test runner, etc.) and rationale behind those choices.
-
 ## Choice of Language ##
 ### Benefits of Python 3 ###
 I decided to use Python 3 to implement this game, primarily because it's my language of choice, but also because I absolutely love how easy is it to define new classes in Python and keep your code organized and well-encaspulated. Though OOP in Python isn't the most intuitive, none of the objects got too complicated in this use case, so Python seemed like a good choice to me. Furthermore, writing code in Python is like writing pseudocode, which is another thing I love about it. It allowed me to focus on the functionality of the separate classes and their methods, rather than worrying about specific syntax.
