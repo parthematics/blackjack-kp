@@ -29,7 +29,7 @@ Any console-based game isn't going to look too pretty. Nevertheless, I wanted to
 
 
 <p align="center">
-  <![](https://github.com/parthematics/blackjack-kp/blob/master/images/gui_example.png) />
+  ![](https://github.com/parthematics/blackjack-kp/blob/master/images/gui_example.png)
 </p>
 
 Instructions for running your code and any tests you may have written
