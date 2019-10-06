@@ -25,11 +25,20 @@ To account for the case where aces were dealt into a hand, I decided to treat ev
 As for determining when the dealer should hit, I didn't want to get too complicated. There are many interesting techniques that we could implement to maximize the expected value of the dealer's hand, but I decided to keep it simple for sake of time. In my implementation, a dealer will always hit on a hand whose total value is less than 17. Some casinos implement the "soft 17" rule, where a dealer hits on a 17 hand if there's the hand has an ace, but I decided not to so we could have a safer dealer. This wouldn't be too difficult to implement if someone wanted to, though.
 
 ### Designing the GUI ###
-Any console-based game isn't going to look too pretty. Nevertheless, I wanted to try my best to make this game of Blackjack as human-friendly as possible. This meant figuring out a way to print out cards so that they looked like actual playing cards. After surfing StackOverflow for a little bit, I came across a technique for rendering playing cards that I thought would work well for my use case. Initially, I was printing cards out by simply outputting their value and suit on the console, i.e. "King of Diamonds." But with enough tweaking and debugging, I was finally able to have cards print out onto the console in the following format, which is much prettier and actually makes it feel like you're playing a card game.  
+Any console-based game isn't going to look too pretty. Nevertheless, I wanted to try my best to make this game of Blackjack as human-friendly as possible. This meant figuring out a way to print out cards so that they looked like actual playing cards. After surfing StackOverflow for a little bit, I came across a technique for rendering playing cards that I thought would work well for my use case. Initially, I was printing cards out by simply outputting their value and suit on the console, i.e. "King of Diamonds." But with enough tweaking and debugging, I was finally able to have cards print out onto the console in the following format, which makes it actually feel like you're playing a card game.  
 
-  ![](https://github.com/parthematics/blackjack-kp/blob/master/images/gui_example.png)
+![](https://github.com/parthematics/blackjack-kp/blob/master/images/gui_example.png)
+  
+### Data Structures Used ###
+Aside from the custom classes designed to support the modularity of this game, I also used a few interesting built-in data structures to help me create classes that could perform their operations efficiently. The one I'd like to address in particular is the `deque` I used to implement my deck of cards from the Python `collections` module. This is Python's version of a double-ended queue, a queue optimized for removal from the front and back. I used this module because it it is able to remove and return the front card from the queue in constant time, which is analogous to dealing the cards. Plus, 'deque' sounds a little like 'deck,' which I thought was funny.
 
 Instructions for running your code and any tests you may have written
 Rules for your card game, if not one of the three listed above
 A brief explanation of your design choices and any data structures or algorithms that you implemented
 Choice of tooling (language, libraries, test runner, etc.) and rationale behind those choices.
+
+## Choice of Language ##
+### Benefits of Python 3 ###
+I decided to use Python 3 to implement this game, primarily because it's my language of choice, but also because I absolutely love how easy is it to define new classes in Python and keep your code organized and well-encaspulated. Though OOP in Python isn't the most intuitive, none of the objects got too complicated in this use case, so Python seemed like a good choice to me. Furthermore, writing code in Python is like writing pseudocode, which is another thing I love about it. It allowed me to focus on the functionality of the separate classes and their methods, rather than worrying about specific syntax.
+
+Python also comes built-in with a deluge of super convenient libraries which I took advantage of, such as the aforementioned `random` module. This module comes built in with the `random.shuffle()`, which is able to shuffle the elements of an iterable efficiently. This allowed me to shuffle the cards in our deck.
