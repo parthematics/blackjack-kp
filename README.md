@@ -22,17 +22,17 @@ A big consideration while coding this game was thinking about when it could poss
 
 To account for the case where aces were dealt into a hand, I decided to treat every ace as an 11 as soon as it was dealt into a hand. Then, whenever I called the `get_hand_value()`, I would check if an ace existed in the hand. If so, I would determine the total value of the hand treating aces as 11s, and then continuously subtract 10 (analogous to converting an 11 ace to a 1 ace) until the total hand value was under 21. 
 
-As for determining when the dealer should hit, I didn't want to get too complicated. There are many interesting techniques that we could implement to maximize the expected value of the dealer's hand, but I decided to keep it simple for sake of time. In my implementation, a dealer will always hit on a hand whose total value is less than 17. Some casino's implement the "soft 17" rule, where a dealer hits on a 17 hand if there's the hand has an ace, but I decided not to so we could have a safer dealer. This wouldn't be too difficult to implement if someone wanted to, though.
+As for determining when the dealer should hit, I didn't want to get too complicated. There are many interesting techniques that we could implement to maximize the expected value of the dealer's hand, but I decided to keep it simple for sake of time. In my implementation, a dealer will always hit on a hand whose total value is less than 17. Some casinos implement the "soft 17" rule, where a dealer hits on a 17 hand if there's the hand has an ace, but I decided not to so we could have a safer dealer. This wouldn't be too difficult to implement if someone wanted to, though.
 
 ### Designing the GUI ###
 Any console-based game isn't going to look too pretty. Nevertheless, I wanted to try my best to make this game of Blackjack as human-friendly as possible. This meant figuring out a way to print out cards so that they looked like actual playing cards. After surfing StackOverflow for a little bit, I came across a technique for rendering playing cards that I thought would work well for my use case. Initially, I was printing cards out by simply outputting their value and suit on the console, i.e. "King of Diamonds." But with enough tweaking and debugging, I was finally able to have cards print out onto the console in the following format, which is much prettier and actually makes it feel like you're playing a card game.
-                                             ┌─────────┐┌─────────┐┌─────────┐
+                                          ```┌─────────┐┌─────────┐┌─────────┐
                                              │8        ││J        ││3        │
                                              │         ││         ││         │
                                              │    ♥    ││    ♦    ││    ♣    │
                                              │         ││         ││         │
                                              │        8││        J││        3│
-                                             └─────────┘└─────────┘└─────────┘
+                                             └─────────┘└─────────┘└─────────┘```
 
 Instructions for running your code and any tests you may have written
 Rules for your card game, if not one of the three listed above
