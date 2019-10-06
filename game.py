@@ -168,7 +168,7 @@ class Blackjack:
     def check_for_win(self, player_value, dealer_value):
         if player_value > dealer_value:
             print("YOU WIN! WELL DONE.")
-        elif dealer_value < player_value:
+        elif dealer_value > player_value:
             print("THE DEALER WINS. BETTER LUCK NEXT TIME!")
         else:
             print("GAME IS A TIE! NICE.")
