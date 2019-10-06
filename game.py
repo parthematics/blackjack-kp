@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+''' Note that the above encoding (utf-8) must be specified in order for the special characters to be printed correctly. '''
 
 import random
 from collections import deque
@@ -13,10 +14,6 @@ class Card:
         self.val = value
         self.suit = suit
 
-    ''' Magic method to printclass out a playing card. Called with 'print(...)'. '''
-    def __str__(self):
-        return "{0} OF {1}".format(self.val, self.suit)
-
 class Deck:
     ''' Initializing a deck of cards. Note that the list comprehension will create a total of
         52 (4 * 13) cards with two for loops. I chose to use a double ended queue (deque) to
@@ -24,9 +21,8 @@ class Deck:
         which is analogous to dealing the cards. Also, 'deque' kind of sounds like 'deck' :) '''
     def __init__(self):
         self.vals = ['A', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
-        self.suits = ['CLUBS (♣)', 'HEARTS (♥)', 'SPADES (♠)', 'DIAMONDS (♦)']
-        self.suits_copy = ['♣', '♥', '♠', '♦']
-        self.deck = deque([Card(val, suit) for val in self.vals for suit in self.suits_copy])
+        self.suits = ['♣', '♥', '♠', '♦']
+        self.deck = deque([Card(val, suit) for val in self.vals for suit in self.suits])
         self.size = 52
 
     ''' Using our deque's popleft() feature to deal the top most card from our deck of cards. '''
@@ -92,8 +88,9 @@ class Hand:
                     offset = ''  # If we write "10" on the card, the edge will be misaligned.
 
                 # Add each card in the current hand line by line to make it all fit horizontally.
+                # The {} are being used to fill in the cards with their specific values, suits, and offsets.
                 print_card[0].append('┌─────────┐')
-                print_card[1].append('│{}{}       │'.format(card.val, offset))  # The {} are being used to fill in the cards.
+                print_card[1].append('│{}{}       │'.format(card.val, offset))
                 print_card[2].append('│         │')
                 print_card[3].append('│    {}    │'.format(card.suit))
                 print_card[4].append('│         │')
@@ -106,14 +103,12 @@ class Hand:
             print(my_hand)
             print("TOTAL VALUE: {0}".format(self.get_hand_value()))
 
+        # If the current hand is a dealers, we want to hide the first card and show the rest (standard Blackjack rules).
+        # The rest of the logic is the same as above.
         else:
-            print_card = [['┌─────────┐'],
-                          ['│░░░░░░░░░│'],
-                          ['│░░░░░░░░░│'],
-                          ['│░░░░░░░░░│'],
-                          ['│░░░░░░░░░│'],
-                          ['│░░░░░░░░░│'],
-                          ['└─────────┘']]
+            # Creating a HIDDEN card.
+            print_card = [['│░░░░░░░░░│'] for _ in range(7)]
+            print_card[0], print_card[6] = ['┌─────────┐'], ['└─────────┘']
 
             for index, card in enumerate(self.hand[1:]):
                 if card.val == '10':
@@ -130,6 +125,12 @@ class Hand:
             dealer_hand = '\n'.join([''.join(line) for line in print_card])
             print(dealer_hand)
 
+''' Main class called when playing a game of Blackjack. This class is at the top of our abstraction and will call
+    all of the classes defined above (for creating a deck of cards, dealing out two hands, etc.) Note that we
+    instantiate the class with several variables, most of which are placeholder values. These placeholders will be
+    redefined in the start_game() method. self.playing and self.game_ended are two booleans used to continue our
+    inner game loops - self.playing will loop until the user specifies that they no longer want to play, and self.game_ended
+    will indicate whether the current game being played has terminated. '''
 class Blackjack:
     def __init__(self):
         self.playing = True
@@ -140,16 +141,21 @@ class Blackjack:
         self.possible_actions = {'h': 1, 'hit': 1, 's': 0, 'stand': 0}
         self.play_again_options = {'y': True, 'yes': True, 'n': False, 'no': False}
 
+    ''' Helper method that takes a hand and returns a boolean corresponding to whether it has Blackjack. '''
     def has_blackjack(self, hand):
         return hand.get_hand_value() == 21
 
+    ''' Helper method that simulates a 'hit' in Blackjack. It adds a random card to a hand. '''
     def hit(self, hand):
         hand.add_to_hand(self.current_deck.deal_card())
         return
 
+    ''' Helper method that returns whether the current player's hand value has gone over 21. '''
     def bust(self):
         return self.my_hand.get_hand_value() > 21
 
+    ''' Helper method that takes in two booleans (corresponding to whether any player got Blackjack). Only called when
+        either the dealer or the player has Blackjack. Returns the corresponding phrase. '''
     def blackjack_reached(self, player, dealer):
         if player and not dealer:
             print("\nCONGRATULATIONS. YOU HAVE BLACKJACK!")
@@ -158,6 +164,7 @@ class Blackjack:
         if player and dealer:
             print("\nYOU BOTH HAVE BLACKJACK. WELL DONE!")
 
+    ''' Helper method that is called when a player decides to stand and the game is judged based on who has more points. '''
     def check_for_win(self, player_value, dealer_value):
         if player_value > dealer_value:
             print("YOU WIN! WELL DONE.")
@@ -165,9 +172,10 @@ class Blackjack:
             print("THE DEALER WINS. BETTER LUCK NEXT TIME!")
         else:
             print("GAME IS A TIE! NICE.")
-
+        # Reset self.game_ended because the current game is now done.
         self.game_ended = True
 
+    ''' Main game method that is called to simulate a full game of Blackjack. There is unfortunately, no functionality for betting. '''
     def start_game(self):
         # Main game loop. Will loop again if player wants to play again.
         while self.playing:
@@ -176,10 +184,12 @@ class Blackjack:
 
             self.my_hand, self.dealer_hand = Hand(), Hand(player=False)
 
+            # Initial hits for player and dealer.
             for _ in range(2):
                 self.hit(self.my_hand)
                 self.hit(self.dealer_hand)
 
+            # Printing out both hands to our terminal display.
             print("\nYOUR HAND: ")
             self.my_hand.show_hand()
             print("==================================")
