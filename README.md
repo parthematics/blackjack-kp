@@ -9,7 +9,9 @@ The rules for the this rendition of Blackjack are exactly the same as the rules 
 
 ## Design Choices ##
 ### Writing Modular Code ###
-Writing a functional game of Blackjack in a reasonable amount of time required that the code I wrote be well abstracted and modular, so that separate classes could call on others and not have to worry about implementation. For this, 
+Writing a functional game of Blackjack in a reasonable amount of time required that the code I wrote be well abstracted and modular, so that separate classes could call on other class methods reliably and efficiently. This would also make the code a lot more readable. For this, I had to design data structures that, when used together, could represent a deck of cards. To do this, I had to think about which features the deck of cards had to perform efficiently: shuffling the cards, dealing out hands, and adding **random** cards to someone's hand (a hit). To create my deck of cards implementation in a modular manner, I decided to create three separate classes:
+* Bullet list
+  * Nested bullet
 
 
 
