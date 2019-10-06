@@ -26,13 +26,13 @@ As for determining when the dealer should hit, I didn't want to get too complica
 
 ### Designing the GUI ###
 Any console-based game isn't going to look too pretty. Nevertheless, I wanted to try my best to make this game of Blackjack as human-friendly as possible. This meant figuring out a way to print out cards so that they looked like actual playing cards. After surfing StackOverflow for a little bit, I came across a technique for rendering playing cards that I thought would work well for my use case. Initially, I was printing cards out by simply outputting their value and suit on the console, i.e. "King of Diamonds." But with enough tweaking and debugging, I was finally able to have cards print out onto the console in the following format, which is much prettier and actually makes it feel like you're playing a card game.
-                                          ```┌─────────┐┌─────────┐┌─────────┐
-                                             │8        ││J        ││3        │
-                                             │         ││         ││         │
-                                             │    ♥    ││    ♦    ││    ♣    │
-                                             │         ││         ││         │
-                                             │        8││        J││        3│
-                                             └─────────┘└─────────┘└─────────┘```
+                                             ┌─────────┐┌─────────┐┌─────────┐  
+                                             │8        ││J        ││3        │  
+                                             │         ││         ││         │  
+                                             │    ♥    ││    ♦    ││    ♣    │  
+                                             │         ││         ││         │  
+                                             │        8││        J││        3│  
+                                             └─────────┘└─────────┘└─────────┘  
 
 Instructions for running your code and any tests you may have written
 Rules for your card game, if not one of the three listed above
