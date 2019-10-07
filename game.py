@@ -151,8 +151,8 @@ class Blackjack:
         return
 
     ''' Helper method that returns whether the current player's hand value has gone over 21. '''
-    def bust(self):
-        return self.my_hand.get_hand_value() > 21
+    def bust(self, hand):
+        return hand.get_hand_value() > 21
 
     ''' Helper method that takes in two booleans (corresponding to whether any player got Blackjack). Only called when
         either the dealer or the player has Blackjack. Returns the corresponding phrase. '''
@@ -168,10 +168,12 @@ class Blackjack:
     def check_for_win(self, player_value, dealer_value):
         if player_value > dealer_value:
             print("YOU WIN! WELL DONE.")
-        elif dealer_value > player_value:
+        elif dealer_value > player_value and dealer_value <= 21:
             print("THE DEALER WINS. BETTER LUCK NEXT TIME!")
-        else:
-            print("GAME IS A TIE! NICE.")
+        elif dealer_value > player_value and dealer_value > 21:
+            print("DEALER BUSTS - YOU WIN! WELL DONE.")
+        elif player_value == dealer_value:
+            print("GAME IS A TIE. NICE!")
         # Reset self.game_ended because the current game is now done.
         self.game_ended = True
 
@@ -223,7 +225,7 @@ class Blackjack:
                     print("DEALER'S HAND: ")
                     self.dealer_hand.show_hand()
 
-                    if self.bust():
+                    if self.bust(self.my_hand):
                         print("YOU BUSTED!")
                         self.game_ended = True
 
