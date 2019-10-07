@@ -49,7 +49,7 @@ class Hand:
         self.hand_value = 0
 
     ''' Private helper method to find the total value of a hand so far. '''
-    def _value_of_hand(self, seen_ace=False):
+    def _value_of_hand(self, seen_ace=0):
         self._reset_hand()
         for card in self.hand:
             if card.val not in {'A', 'J', 'Q', 'K'}:
@@ -59,13 +59,14 @@ class Hand:
                     self.hand_value += 10
                 else:
                     # We start by treating all aces as 11s.
-                    seen_ace = True
+                    seen_ace += 1
                     self.hand_value += 11
 
         # Accounting for the case where we want 'A' to be treated as a 1.
         if self.hand_value > 21 and seen_ace:
-            while self.hand_value > 21:
+            while seen_ace and self.hand_value > 21:
                 self.hand_value -= 10
+                seen_ace -= 1
 
     ''' Method that adds a new card to our hand of cards. '''
     def add_to_hand(self, card):
