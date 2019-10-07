@@ -84,6 +84,7 @@ class Hand:
             print_card = [[] for _ in range(7)]
 
             for index, card in enumerate(self.hand):
+                offset = ' '
                 if card.val == '10':
                     offset = ''  # If we write "10" on the card, the edge will be misaligned.
 
